@@ -12,10 +12,15 @@
     <div id="app">  <!--lugar de la aplicacion Vue, Vue controlra el div-->
         <p>Nombre: {{nombre}}</p> <!--interpolacion {{}}, mostramos datos-->
         <p>Eedad: {{edad}}</p>
-        <p>Ciudad: {{Tupungato}}</p>
+        <p>Ciudad: {{ciudad}}</p>
 
         <p>Hol, mi nombre es {{nombre}}, tengo {{edad}} anios y vivo en {{ciudad}}.</p>
         <!--Vue se encrga de reemplazar los {{}} por los datos almacendos en data-->
+
+        <h2>Contador: {{contador}}</h2> <!--interpolacion-->
+
+        <button @click="contador++">Incrementar</button>
+        <button @click="contador--">Decrementar</button>
 
     </div>
     <script> //datos a declarar con objeto "data de Vue"
@@ -24,7 +29,8 @@
             data: {
                 nombre: `Ana Garcia`,
                 edad: 30,
-                ciudad: `Tupungato`
+                ciudad: `Tupungato`,
+                contador: 0
             }
         })
 
