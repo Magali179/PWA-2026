@@ -22,18 +22,67 @@
         <button @click="contador++">Incrementar</button>
         <button @click="contador--">Decrementar</button>
 
+        <h2>Lista de tareas</h2>
+
+        <input v-model="nuevaTarea">
+        <button @click="agregarTarea">Agregar tarea</button>
+
+        <div v-for="tarea in tareas" :key="tarea.id"> <!--"Por cada tarea que haya dentro de tareas,
+             hacé esto.", vue toma tarea y la representa en HTML--><!--:key= le proporciona a Vue 
+             una identificación única para cada elemento de la lista.-->
+             <!--:key="" se utiliza junto con v-for para ident cda elemento de la lista-->
+            <input type="checkbox" v-model="tarea.completada"> <!--Esto conecta el checkbox con: completada: false-->
+            {{tarea.texto}} <!--Mostrá el texto de la tarea actual.-->
+
+        </div>
+        <p>Total de Tareas: {{totalTareas}}</p>
+        <p>Total Pendientes: {{tareasPendientes}}</p>
+
     </div>
     <script> //datos a declarar con objeto "data de Vue"
         const app= new Vue({
             el: `#app`,
             data: {
-                nombre: `Ana Garcia`,
-                edad: 30,
-                ciudad: `Tupungato`,
-                contador: 0
-            }
-        })
+    nombre: `Ana Garcia`,
+    edad: 30,
+    ciudad: `Tupungato`,
+    contador: 0,
 
+    nuevaTarea: "",
+
+    tareas: [
+        {
+            id: 1,
+            texto: "Aprender Vue",
+            completada: false
+        }
+    ]
+},
+
+    methods: {
+        agregarTarea() {
+
+            if (this.nuevaTarea.trim() !== "") {
+
+                this.tareas.push({
+                        id: Date.now(),
+                    texto: this.nuevaTarea,
+                    completada: false
+                }); 
+            this.nuevaTarea = "";
+        }
+    }
+},
+    computed: { //sirve para crear valores calculados a partir de otros datos.
+        totalTareas(){
+            return this.tareas.length;
+        },
+        tareasPendientes() {
+        return this.tareas.filter(tarea => !tarea.completada).length;
+    } //funcion tarea =>/!trea.completada= no"Para cada tarea, fijate si NO está completada."
+       
+    }
+});
     </script>
 
 </body>
