@@ -37,52 +37,121 @@
         </div>
         <p>Total de Tareas: {{totalTareas}}</p>
         <p>Total Pendientes: {{tareasPendientes}}</p>
+        <h2>Eventos de Vue</h2>
+        <div v-for="evento in listaeventos" :key="'evento-' + evento.id">
+    {{ evento.nombre }} - {{ evento.timestamp }}
+</div>
+        <button @click="destruirVue">Destruir Vue</button>
 
     </div>
     <script> //datos a declarar con objeto "data de Vue"
+        const listaEventos = []
+
+        function registrarEvento(nombre) {
+            listaEventos.push({
+            id: listaEventos.length + 1,
+            nombre: nombre,
+            timestamp: Date.now()
+        });
+    }
+        
+    
         const app= new Vue({
             el: `#app`,
+
             data: {
-    nombre: `Ana Garcia`,
-    edad: 30,
-    ciudad: `Tupungato`,
-    contador: 0,
+                nombre: `Ana Garcia`,
+                edad: 30,
+                ciudad: `Tupungato`,
+                contador: 0,
 
-    nuevaTarea: "",
+                nuevaTarea: "",
 
-    tareas: [
+                tareas: [
         {
-            id: 1,
-            texto: "Aprender Vue",
-            completada: false
+                        id: 1,
+                        texto: "Aprender Vue",
+                        completada: false
         }
-    ]
+    ],
+                listaeventos: listaEventos
 },
 
-    methods: {
-        agregarTarea() {
+            methods: {
+                agregarTarea() {
+                    
+                    if (this.nuevaTarea.trim() !== "") {
 
-            if (this.nuevaTarea.trim() !== "") {
-
-                this.tareas.push({
-                        id: Date.now(),
-                    texto: this.nuevaTarea,
-                    completada: false
+                        this.tareas.push({
+                            id: Date.now(),
+                            texto: this.nuevaTarea,
+                            completada: false,
+                
                 }); 
-            this.nuevaTarea = "";
+                        this.nuevaTarea = "";
         }
+    },
+                destruirVue() { // Destruye la instancia de Vue
+        
+                    this.$destroy();
     }
 },
-    computed: { //sirve para crear valores calculados a partir de otros datos.
-        totalTareas(){
-            return this.tareas.length;
+
+            computed: { //Sirve para crear valores calculados a partir de otros datos.
+                totalTareas(){
+                    return this.tareas.length;
         },
-        tareasPendientes() {
-        return this.tareas.filter(tarea => !tarea.completada).length;
-    } //funcion tarea =>/!trea.completada= no"Para cada tarea, fijate si NO está completada."
+                tareasPendientes() {
+                    return this.tareas.filter(tarea => !tarea.completada).length;
+    } //Funcion tarea =>/!trea.completada= no"Para cada tarea, fijate si NO está completada."
        
-    }
+    },
+            beforeCreate() {   // Antes de crear instancia d eVue
+                registrarEvento("beforeCreate");
+            },
+
+            created() { //Vue ya creo la instacia y los metod disponibles 
+                registrarEvento("created");
+            },
+
+            beforeMount() {  //Vue esta por mostrar aplicacin en la pagina
+                registrarEvento("beforeMount");
+            },
+
+            mounted() {  //Ya monto la aplicacion en pagina
+                registrarEvento("mounted");
+            },
+            //utilizo cosole.log y no registrar eventos(),asi evitamos mod 
+            //listaEventos y caer enun bucle 
+            beforeUpdate() { // // Vue está por actualizar la aplicación
+                // Utilizo console.log y no registrarEvento()
+   
+                console.log("beforeUpdate");
+            },
+
+            updated() {  // Vue terminó de actualizar la aplicación
+                // Utilizo console.log y no registrarEvento()
+    
+                console.log("updated");
+            },
+            
+            beforeDestroy() { // Vue está a punto de destruir la instancia
+                // Utilizo console.log y no registrarEvento()
+    
+                registrarEvento("beforeDestroy");
+                console.log("beforedestroy");
+            },
+
+            destroyed() {  // La instancia de Vue ya fue destruida
+   
+                console.log("destroyed");
+            },
+           
 });
+
+// algunos eventos utilizan console.log principalmente para poder observar que estos 
+//eventos se ejecutaron sin modificar la lista reactiva mientras Vue está actualizando
+// o destruyendo la instancia.
     </script>
 
 </body>
