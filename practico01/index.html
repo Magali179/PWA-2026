@@ -40,6 +40,21 @@
         </div>
         <p>Total de Tareas: {{totalTareas}}</p>
         <p>Total Pendientes: {{tareasPendientes}}</p>
+
+        <h2>Lista de Posts</h2>
+        <div v-for="post in listaPosts" :key="'post-' + post.id" @click="obtenerComments(post.id)"> <!--v-for usan numeros como "key"-->
+            <!--al hacer click en el post se ejecutara obtenerComentrios y psa el id de ese post-->
+            {{post.title}}
+
+        </div>
+        <h2>Comentarios</h2>
+
+        <div v-for="comentario in listaComentarios" :key="'comentario-' + comentario.id">
+            <!--por cda comentrio creame un div-->
+            <p>{{ comentario.name }}</p> <!--nombre comentario-->
+            <p>{{ comentario.body }}</p> <!--cuerpo comentario-->
+        </div>
+
         <h2>Eventos de Vue</h2>
         <div v-for="evento in listaeventos" :key="'evento-' + evento.id">
     {{ evento.nombre }} - {{ evento.timestamp }}
@@ -69,6 +84,9 @@
                 contador: 0,
 
                 nuevaTarea: "",
+
+                listaPosts:[], //inicialmente vacia
+                listaComentarios: [],
 
                 tareas: [
         {
@@ -106,9 +124,13 @@
                 },
                     obtenerComments(postId) {
                             return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
-                            .then(respuesta => respuesta.data);
-                }
-            },
+                            .then(respuesta => {
+                                //guardr comentqariow en lista
+                                this.listaComentarios = respuesta.data;
+                                return respuesta.data;
+                            });
+                        }
+                        },
     
 
             computed: { //Sirve para crear valores calculados a partir de otros datos.
@@ -134,7 +156,12 @@
 
             mounted() {  //Ya monto la aplicacion en pagina
                 registrarEvento("mounted");
-            },
+                for (let i = 1; i <=10; i++){ //i obtinen diferentes valorews hasta 10, con el "for"
+                    this.obtenerPost(i).then(post =>{
+                    this.listaPosts.push(post);
+                    });
+                }
+                },
             //utilizo cosole.log y no registrar eventos(),asi evitamos mod 
             //listaEventos y caer enun bucle 
             beforeUpdate() { // // Vue está por actualizar la aplicación
