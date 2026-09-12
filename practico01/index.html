@@ -3,7 +3,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> <!-- incorporamos Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- incorporamos Axios -->
+    
     <title>Perfil Simple</title>
 </head>
 
@@ -94,8 +97,19 @@
                 destruirVue() { // Destruye la instancia de Vue
         
                     this.$destroy();
-    }
-},
+    
+    },              // Las funciones devuelven los datos obtenidos de la API.
+                    // Se utiliza console.log en la consola del navegador para comprobar el resultado.
+                    obtenerPost(postId) {
+                        return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+                        .then(respuesta => respuesta.data);
+                },
+                    obtenerComments(postId) {
+                            return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+                            .then(respuesta => respuesta.data);
+                }
+            },
+    
 
             computed: { //Sirve para crear valores calculados a partir de otros datos.
                 totalTareas(){
